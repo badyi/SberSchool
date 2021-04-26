@@ -41,7 +41,7 @@ struct LinkedList<T> {
                 fatalError("index out of range")
             }
         
-            return get(by: index).value
+            return get(by: index)!.value
         }
         
         set {
@@ -49,19 +49,44 @@ struct LinkedList<T> {
                 fatalError("index out of range")
             }
             simpleCopy()
-            get(by: index).value = newValue
+            get(by: index)?.value = newValue
             //O(n+n)
         }
     }
     
     mutating func remove(at index: Int) {
+        if isEmpty() || index < 0 || index >= count {
+            fatalError("index out of range")
+        }
         simpleCopy()
-        //implenetation ...
+        if index == 0 {
+            self.head = self.head?.next
+        } else {
+            let prevNode = get(by: index - 1)
+            let nextNode = get(by: index + 1)
+            prevNode?.next = nextNode
+        }
+        count -= 1
+        //O(3n)
     }
     
-    mutating func insert(in index: Int) {
+    mutating func insert(in index: Int, value: T) {
+        if isEmpty() || index < 0 || index >= count {
+            fatalError("index out of range")
+        }
         simpleCopy()
-        //implenetation ...
+        
+        if index == 0 {
+            let node = Node(with: value, next: head)
+            head = node
+        } else {
+            let newNode = Node(with: value)
+            let prevNode = get(by: index - 1)
+            let currentNode = get(by: index)
+            prevNode?.next = newNode
+            newNode.next = currentNode
+        }
+        count += 1
     }
     
     //MARK: - print
@@ -114,12 +139,12 @@ extension LinkedList {
         return nodeCopy
     } */
     
-    private func get(by index: Int) -> Node<T> {
+    private func get(by index: Int) -> Node<T>? {
         var node = head
         for _ in 0..<index {
             node = node?.next
         }
-        return node!
+        return node
     }
     
     private mutating func push(_ currentNode: Node<T>,_ value: T) {
@@ -155,8 +180,10 @@ list1[1] = 22
 list1[2] = 33
 
 print("push to list1 value 9 and push to list2 value 99\n")
+
 list1.push(9)
 list2.push(99)
+
 
 print("--List1--")
 list1.printList()
@@ -164,4 +191,25 @@ list1.printList()
 print("--List2--")
 list2.printList()
 
-print("\n list1 - head addres \(Unmanaged.passUnretained(list1.head!).toOpaque())\n list2 head address - \(Unmanaged.passUnretained(list2.head!).toOpaque()) \n")
+print("remove form list1 firts value and remove from list2 last value\n")
+list1.remove(at: 0)
+list2.remove(at: list2.count - 1)
+
+print("--List1--")
+list1.printList()
+
+print("--List2--")
+list2.printList()
+
+print("\ninsert into list1 at index 1 value 9999 - insert into list2 at index 2 and at last index values 0 and 444\n")
+list1.insert(in: 0, value: 9999)
+list2.insert(in: 2, value: 0)
+list2.insert(in: list2.count - 1, value: 444)
+
+print("--List1--")
+list1.printList()
+
+print("--List2--")
+list2.printList()
+
+print("\n list1 - head addres - \(Unmanaged.passUnretained(list1.head!).toOpaque())\n list2 - head address - \(Unmanaged.passUnretained(list2.head!).toOpaque()) \n")
