@@ -1,7 +1,7 @@
 import Foundation
 
 
-//MARK: - Value type
+// MARK: - Value type
 // enum и struct не могут быть унаследованы, поэтому компилятор вызывает для них всегда direct dispatch
 struct Cat {
     func sayMeow() {} // Direct Dispatch
