@@ -105,6 +105,7 @@ extension TextFieldBuilder {
         return textField
     }
 }
+
 enum AuthType {
     case google, facebook, phone
 }
@@ -113,6 +114,7 @@ protocol LoginPresenterProtocol: AnyObject {
     var loginType: AuthType { get set }
     var credentials: [String: String] { get set }
 }
+
 protocol SignUpPresenterProtocol: AnyObject {
     var signUpType: AuthType { get set }
     var credentials: [String: String] { get set }
