@@ -105,27 +105,36 @@ extension TextFieldBuilder {
         return textField
     }
 }
+enum AuthType {
+    case google, facebook, phone
+}
 
 protocol LoginPresenterProtocol: AnyObject {
+    var loginType: AuthType { get set }
     var credentials: [String: String] { get set }
 }
 protocol SignUpPresenterProtocol: AnyObject {
+    var signUpType: AuthType { get set }
     var credentials: [String: String] { get set }
 }
 
 final class LoginPresenter: LoginPresenterProtocol {
+    var loginType: AuthType
     var credentials: [String: String]
     
-    init(with credentials: [String: String]) {
+    init(with credentials: [String: String], _ type: AuthType) {
         self.credentials = credentials
+        self.loginType = type
     }
 }
 
 final class SignUpPresenter: SignUpPresenterProtocol {
+    var signUpType: AuthType
     var credentials: [String : String]
     
-    init(with credentials: [String: String]) {
+    init(with credentials: [String: String], _ type: AuthType) {
         self.credentials = credentials
+        self.signUpType = type
     }
 }
 
@@ -178,12 +187,22 @@ protocol AuthViewControllerFactoryProtocol {
     func createSignUpViewController() -> UIViewController
 }
 
-final class AuthViewControllerFactory: AuthViewControllerFactoryProtocol {
+final class GoogleAuthViewControllerFactory: AuthViewControllerFactoryProtocol {
     func createLoginViewController() -> UIViewController {
-        return LoginViewController(with: LoginPresenter(with: ["SomeKey":"12345"]))
+        return LoginViewController(with: LoginPresenter(with: ["SomeKey" : "12345"], .google))
     }
     
     func createSignUpViewController() -> UIViewController {
-        return SignUpViewController(with: SignUpPresenter(with: ["SomeKey":"789243"]))
+        return SignUpViewController(with: SignUpPresenter(with: ["SomeKey" :" 789243"], .google))
+    }
+}
+
+final class FaceBookAuthViewControllerFactory: AuthViewControllerFactoryProtocol {
+    func createLoginViewController() -> UIViewController {
+        return LoginViewController(with: LoginPresenter(with: ["SomeKey" : "1453"], .facebook))
+    }
+    
+    func createSignUpViewController() -> UIViewController {
+        return SignUpViewController(with: SignUpPresenter(with: ["SomeKey" : "5489"], .facebook))
     }
 }
